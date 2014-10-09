@@ -1,0 +1,46 @@
+body {
+	background-color:#EEEEEE;
+	font-family:"DejaVu Sans";
+	font-size:12pt;
+	margin:0;
+	padding:0;
+}
+
+a, a:visited, a:focus {
+	outline:0;
+	color:#0a4488;
+	text-decoration:none;
+}
+
+a:hover {
+	color:#000088;
+}
+
+#header {
+	border-bottom:1px solid #3e3e3e;
+	padding:2px;
+}
+
+#content {
+	min-height:400px;
+	padding:5px;
+}
+
+#footer {
+	font-size:9pt;
+	padding:5px;
+}
+
+.article {
+	
+}
+
+.article > .content {
+	font-weight:normal;
+	font-size:10pt;
+}
+
+.article > .title {
+	font-weight:bold;
+	font-size:14pt;
+}
