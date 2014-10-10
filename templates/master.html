@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	{% block head %}
 		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
@@ -5,9 +6,11 @@
 	{% block body %}
 		<div id="header">
 			{% block header %}
-				<h4>FWiki</h4>
-				<a href="{{ url_for('route_index') }}">Home</a>
-				<a href="{{ url_for('route_random') }}">Random</a>
+				<h2>FWiki</h2>
+				<nav>
+					<a href="{{ url_for('route_index') }}">Home</a>
+					<a href="{{ url_for('route_random') }}">Random</a>
+				</nav>
 			{% endblock %}
 		</div>
 		<div id="content">

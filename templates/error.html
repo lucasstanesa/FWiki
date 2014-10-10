@@ -1,8 +1,11 @@
 {% extends "master.html" %}
 {% block head %}
-	<title>FWiki</title>
+	<title>FWiki - Error</title>
 	{{ super() }}
 {% endblock %}
 {% block content %}
-	<p>Welcome to FWiki</p>
+	<center>
+		<h1>{{ error }}</h1>
+		<p>{{ message }}</p>
+	</center>
 {% endblock %}
