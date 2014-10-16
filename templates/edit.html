@@ -1,0 +1,15 @@
+{% extends "master.html" %}
+{% block head %}
+	<title>FWiki - Editing {{ article['title'] }}</title>
+	<link rel="stylesheet", href="{{ url_for('static', filename='editor.css') }}"/>
+	{{ super() }}
+{% endblock %}
+{%block content %}
+	<nav>
+		<a href="{{ url_for('route_article', title=article['title']) }}">Back</a>
+	</nav>
+	<form method="POST" action="{{ url_for('route_do_edit') }}">
+		<input type="hidden" name="article_id" id="{{ article['id'] }}"/>
+		<textarea id="editor" name="content">{{ article['content'] }}</textarea>
+	</form>
+{% endblock %}

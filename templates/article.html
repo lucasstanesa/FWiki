@@ -6,6 +6,12 @@
 {% block content %}
 	<div class="article">
 		<h2 class="title">{{ title }}</h2>
-		<p class="content">{{ g.parser.format(content) }}</p>
+		<p class="content">
+			{% if g.parser %}
+				{{ g.parser.format(content)|safe }}
+			{% else %}
+				{{ content  }}
+			{% endif %}
+		</p>
 	</div>
 {% endblock %}

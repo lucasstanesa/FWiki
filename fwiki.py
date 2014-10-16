@@ -1,7 +1,11 @@
 from flask import Flask, render_template, redirect, g, url_for
+from markupsafe import Markup, escape
 import sqlite3 as sqlite
 import bbcode
+import markdown
 
+#Local imports
+from database import *
 
 app = Flask(__name__)
 
@@ -14,22 +18,43 @@ def route_article(title):
 	title = title.replace("_", " ")
 	
 	if not db_init():
-		return redier_template('error.html', error='Internal Error', message='An unexpected error occurred'), 503
+		return error('Internal Error', 'An unexpected error occurred'), 503
 
-	g.cursor.execute("SELECT * FROM articles WHERE title=?", [title])
-	article = g.cursor.fetchone()
+	db_query("SELECT * FROM articles WHERE title=?", [title])
+	article = db_fetchone()
+	db_close()
 	if article != None:
-		g.parser = bbcode.Parser()
-		g.parser.add_simple_formatter('wiki', url_for('route_article', title="%(value)s"))
-		return render_template('article.html', title=title, content=article['content'])
+		markdown_init()
+		return render_template('article.html', title=title, content=escape(article['content']))
 	else:
-		return render_template('error.html', error='404', message='The requested page was not found'), 404
+		return render_template('article.html', title=title, content="There is currently no text on this page")
+
+@app.route('/<title>/edit')
+def route_edit(title):
+	title = title.replace("_", " ")
+
+	if not db_init():
+		return error('Internal Error', 'An unexpected error occurred'), 503
+	
+	db_query("SELECT * FROM articles WHERE title=?", [title])
+	article = db_fetchone()
+	if article != None:
+		return render_template('edit.html', article=article)
+	else:
+		return redirect('/')
+
+@app.route('/do/edit', methods=["POST"])
+def route_do_edit():
+	article_id = request.form['article_id']
+	content = require.form['content']
+	
 
 @app.route('/random')
 def route_random():
 	db_init()
-	g.cursor.execute("SELECT title FROM articles WHERE title != 'Main Page' ORDER BY RANDOM( ) LIMIT 1")
-	title = g.cursor.fetchone()['title']
+	db_query("SELECT title FROM articles WHERE title!='Main Page' ORDER BY RANDOM() LIMIT 1")
+	title = db_fetchone()['title']
+	db_close()
 
 	if title:
 		return redirect('/' + title.replace(" ", "_"))
@@ -37,17 +62,17 @@ def route_random():
 		return redirect('/')
 
 
-def db_init():
-	try:
-		g.dbh = sqlite.connect("wiki.db")
-		g.dbh.row_factory = sqlite.Row
-		g.cursor = g.dbh.cursor()
-	except Exception:
-		return False
-	finally:
-		return True
+def error(error, message):
+	return render_template('error.html', error=error, message=message)
 
-def db_close():
-	g.dbh.commit()
-	g.dbh.close()
+def markdown_init():
+	g.parser = markdown.Markdown(safe_mode='')
 
+def bbcode_article(tag_name, value, options, parent, context):
+	url = url_for('route_article', title=value)
+	return '<a href="%s">%s</a>' % (url, value)
+
+def bbcode_section(tag_name, value, options, parent, context):
+	utitle = value.replace(" ", "_").lower()
+	url = '#' + utitle
+	return '<a title="%s" name="%s" class="section">%s</a>' % (utitle, utitle, value)

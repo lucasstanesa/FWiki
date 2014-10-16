@@ -54,6 +54,13 @@ nav > a:not(:first-child) {
 	font-size:10pt;
 }
 
+.article > .content > .section,
+.article > .content > .section:hover {
+	font-weight:bold;
+	font-size:12pt;
+	color:#000000;
+}
+
 .article > .title {
 	font-weight:bold;
 	font-size:14pt;
