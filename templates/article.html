@@ -7,11 +7,7 @@
 	<div class="article">
 		<h2 class="title">{{ title }}</h2>
 		<p class="content">
-			{% if g.parser %}
-				{{ g.parser.format(content)|safe }}
-			{% else %}
-				{{ content  }}
-			{% endif %}
+			{{ markdown_parse(content)|safe }}
 		</p>
 	</div>
 {% endblock %}
