@@ -65,3 +65,11 @@ nav > a:not(:first-child) {
 	font-weight:bold;
 	font-size:14pt;
 }
+
+.left {
+	float:left;
+}
+
+.right {
+	float:right;
+}

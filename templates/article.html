@@ -3,8 +3,12 @@
 	<title>Fwiki - {{ title  }}</title>
 	{{ super() }}
 {% endblock %}
+{% block header %}
+	{{ super() }}
+	<a class="right" href="{{ url_for('route_edit', title=title) }}"><small>Edit</small></a>
+{% endblock %}
 {% block content %}
-	<div class="article">
+		<div class="article">
 		<h2 class="title">{{ title }}</h2>
 		<p class="content">
 			{{ markdown_parse(content)|safe }}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, g, url_for
+from flask import Flask, request, render_template, redirect, g, url_for
 from markupsafe import Markup, escape
 import sqlite3 as sqlite
 import markdown
@@ -23,29 +23,41 @@ def route_article(title):
 	article = db_fetchone()
 	db_close()	
 	if article != None:
-		return render_template('article.html', title=title, content=escape(article['content']))
+		return render_template('article.html', title=title, content=article['content'])
 	else:
 		return render_template('article.html', title=title, content="There is currently no text on this page")
 
-@app.route('/<title>/edit')
+@app.route('/edit/<title>')
 def route_edit(title):
 	title = title.replace("_", " ")
 
 	if not db_init():
 		return error('Internal Error', 'An unexpected error occurred'), 503
 	
-	db_query("SELECT * FROM articles WHERE title=?", [title])
+	db_query("SELECT * FROM articles WHERE title = ?", [title])
 	article = db_fetchone()
 	if article != None:
-		return render_template('edit.html', article=article)
+		return render_template('edit.html', title=article['title'], id=article['id'], content=article['content'])
 	else:
-		return redirect('/')
+		return render_template('edit.html', title=escape(title), id=0, content='')
 
-@app.route('/do/edit', methods=["POST"])
+@app.route('/do/edit', methods=['POST'])
 def route_do_edit():
-	article_id = request.form['article_id']
-	content = require.form['content']
+	title = request.form['title']
+	id = int(request.form['id'])
+	content = request.form['content']
+
+	if not db_init():
+		return error('Internal Error', 'An unexpected error occurred'), 503
+
+	if id == 0:
+		db_query("INSERT INTO articles VALUES(NULL, ?, ?)", [escape(title), escape(content)])
+	else:
+		db_query("UPDATE articles SET content = ? WHERE id = ?", [escape(content), id])
 	
+	db_close()
+	
+	return redirect(url_for('route_article', title=title))
 
 @app.route('/random')
 def route_random():
@@ -70,11 +82,4 @@ def markdown_parse(content):
 def util_processor():
     return dict(markdown_parse=markdown_parse)
 
-def bbcode_article(tag_name, value, options, parent, context):
-	url = url_for('route_article', title=value)
-	return '<a href="%s">%s</a>' % (url, value)
 
-def bbcode_section(tag_name, value, options, parent, context):
-	utitle = value.replace(" ", "_").lower()
-	url = '#' + utitle
-	return '<a title="%s" name="%s" class="section">%s</a>' % (utitle, utitle, value)
