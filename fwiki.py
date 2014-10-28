@@ -4,7 +4,8 @@ import sqlite3 as sqlite
 import markdown
 
 #Local imports
-from database import *
+import database
+import config
 
 app = Flask(__name__)
 
@@ -16,12 +17,12 @@ def route_index():
 def route_article(title):
 	title = title.replace("_", " ")
 	
-	if not db_init():
-		return error('Internal Error', 'An unexpected error occurred'), 503
+	if not database.init():
+		return error(config.db_err_title, config.db_err_msg), 503
 
-	db_query("SELECT * FROM articles WHERE title=?", [title])
-	article = db_fetchone()
-	db_close()	
+	database.query("SELECT * FROM articles WHERE title=?", [title])
+	article = database.fetchone()
+	database.close()	
 	if article != None:
 		return render_template('article.html', title=title, content=article['content'])
 	else:
@@ -31,11 +32,13 @@ def route_article(title):
 def route_edit(title):
 	title = title.replace("_", " ")
 
-	if not db_init():
-		return error('Internal Error', 'An unexpected error occurred'), 503
+	if not database.init():
+		return error(config.db_err_title, config.db_err_msg), 503
 	
-	db_query("SELECT * FROM articles WHERE title = ?", [title])
-	article = db_fetchone()
+	database.query("SELECT * FROM articles WHERE title = ?", [title])
+	article = database.fetchone()
+	database.close()
+
 	if article != None:
 		return render_template('edit.html', title=article['title'], id=article['id'], content=article['content'])
 	else:
@@ -47,24 +50,28 @@ def route_do_edit():
 	id = int(request.form['id'])
 	content = request.form['content']
 
-	if not db_init():
-		return error('Internal Error', 'An unexpected error occurred'), 503
+	if config.edit_pass != None:
+		if request.form['pass'] != config.edit_pass:
+			return redirect('/')
+
+	if not database.init():
+		return error(config.db_err_title, config.db_err_msg), 503
 
 	if id == 0:
-		db_query("INSERT INTO articles VALUES(NULL, ?, ?)", [escape(title), escape(content)])
+		database.query("INSERT INTO articles VALUES(NULL, ?, ?)", [escape(title), escape(content)])
 	else:
-		db_query("UPDATE articles SET content = ? WHERE id = ?", [escape(content), id])
+		database.query("UPDATE articles SET content = ? WHERE id = ?", [escape(content), id])
 	
-	db_close()
+	database.close()
 	
 	return redirect(url_for('route_article', title=title))
 
 @app.route('/random')
 def route_random():
-	db_init()
-	db_query("SELECT title FROM articles WHERE title!='Main Page' ORDER BY RANDOM() LIMIT 1")
-	row = db_fetchone()
-	db_close()
+	database.init()
+	database.query("SELECT title FROM articles WHERE title!='Main Page' ORDER BY RANDOM() LIMIT 1")
+	row = database.fetchone()
+	database.close()
 
 	if row != None:
 		return redirect('/' + row['title'].replace(" ", "_"))
@@ -75,11 +82,8 @@ def route_random():
 def error(error, message):
 	return render_template('error.html', error=error, message=message)
 
-def markdown_parse(content):
-	return markdown.markdown(content)
-
 @app.context_processor
 def util_processor():
-    return dict(markdown_parse=markdown_parse)
+    return dict(markdown_parse=markdown.markdown, config=config)
 
 

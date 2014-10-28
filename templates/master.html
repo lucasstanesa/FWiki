@@ -19,7 +19,9 @@
 		</div>
 		<div id="footer">
 			{% block footer %}
-				<span>Powered by FWiki</span>
+				{% if config.expose %}
+					<span>Powered by FWiki</span>
+				{% endif %}
 			{% endblock %}
 		</div>
 	{% endblock %}

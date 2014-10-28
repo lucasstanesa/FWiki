@@ -1,6 +1,6 @@
 {% extends "master.html" %}
 {% block head %}
-	<title>FWiki - Editing {{ title }}</title>
+	<title>{{ config.title }} - Editing {{ title }}</title>
 	<link rel="stylesheet" href="{{ url_for('static', filename='editor.css') }}"/>
 	{{ super() }}
 {% endblock %}
@@ -17,6 +17,10 @@
 		{% endif %}
 		<input type="hidden" name="title" value="{{ title }}"/>
 		<textarea id="editor" name="content">{{ content }}</textarea>
+
+		{% if config.edit_pass %}
+			<p>Pass <input type="password" name="pass"/></p>
+		{% endif %}
 		<input type="submit" name="submit" value="Submit"/>
 	</form>
 {% endblock %}
