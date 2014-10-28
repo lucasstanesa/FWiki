@@ -18,7 +18,3 @@ markdown >= 2.5.1
 ```
 pip install markdown
 ```
-
-```
-python runserver.py
-```
