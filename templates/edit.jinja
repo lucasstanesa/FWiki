@@ -1,7 +1,7 @@
-{% extends "master.html" %}
+{% extends "base.jinja" %}
 {% block head %}
-	<title>{{ config.title }} - Editing {{ title }}</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='editor.css') }}"/>
+	{% block title %}{{ config.title }} - Editing {{ title }}{% endblock %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}"/>
 	{{ super() }}
 {% endblock %}
 {%block content %}
@@ -10,7 +10,7 @@
 		<a href="{{ url_for('route_article', title=title) }}">Back</a>
 	</nav>
 	<form method="POST" action="{{ url_for('route_do_edit') }}">
-		{% if id != "" %}
+		{% if id %}
 			<input type="hidden" name="id" value="{{ id }}"/>
 		{% else %}
 			<input type="hidden" name="id" value="0"/>

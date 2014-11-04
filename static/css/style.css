@@ -1,7 +1,5 @@
 body {
 	background-color:#EEEEEE;
-	font-family:"DejaVu Sans";
-	font-size:12pt;
 	margin:0;
 	padding:0;
 }
@@ -32,6 +30,12 @@ nav > a:not(:first-child) {
 #header {
 	border-bottom:1px solid #3e3e3e;
 	padding:2px;
+}
+
+#title {
+	font-size:14pt;
+	font-weight:bold;
+	margin:0 0 2px 0;
 }
 
 #content {

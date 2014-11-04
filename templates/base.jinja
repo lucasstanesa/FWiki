@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
-	{% block head %}
-		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
-	{% endblock %}
-	{% block body %}
+	<head>
+		{% block head %}
+			<title>{% block title %}{% endblock title %}</title>
+			<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+		{% endblock head %}
+	</head>
+	<body>
 		<div id="header">
 			{% block header %}
-				<h2>FWiki</h2>
+				{% if config.logo_file %}
+					<img src="{{ url_for('static', filename='img/' + config.logo_file) }}"/>
+				{% endif %}
+				<p id="title">{{ config.title }}</p>
 				<nav>
 					<a href="{{ url_for('route_index') }}">Home</a>
 					<a href="{{ url_for('route_random') }}">Random</a>
@@ -24,5 +30,5 @@
 				{% endif %}
 			{% endblock %}
 		</div>
-	{% endblock %}
+	</body>
 </html>
