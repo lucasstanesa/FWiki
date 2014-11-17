@@ -4,7 +4,7 @@ from fwiki import app
 app.config['debug'] = True
 
 #The title of the wiki
-app.config['title'] = 'American 60\'s/70\'s Wiki'
+app.config['title'] = ''
 
 #The wiki logo
 app.config['logo_file'] = None
