@@ -1,4 +1,4 @@
-{% extends "base.jinja" %}
+{% extends "base.html" %}
 {% block title %}{{ config.title }} - {{ title  }}{% endblock %}
 {% block header -%}
 	{{ super() }}
@@ -6,7 +6,11 @@
 {% endblock %}
 {% block content -%}
 		<div class="article">
-		<h2 class="title">{{ title }}</h2>
+			{% if title == 'Main Page' -%}
+				<h2 class="title">{{ config.title }}</h2>
+			{% else -%}
+				<h2 class="title">{{ title }}</h2>
+			{% endif %}
 		<p class="content">
 			{{ markdown_parse(content)|safe }}
 		</p>

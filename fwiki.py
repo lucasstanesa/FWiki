@@ -3,17 +3,13 @@ from markupsafe import Markup, escape
 import sqlite3 as sqlite
 import markdown
 
-#Local imports
 import database
 
 app = Flask(__name__)
 
-import app.config
+import config
 
-@app.route('/')
-def route_index():
-	return route_article('Main_Page')
-
+@app.route('/', defaults={ 'title' : 'Main_Page' })
 @app.route('/<title>')
 def route_article(title):
 	title = title.replace("_", " ")
@@ -21,29 +17,30 @@ def route_article(title):
 	if not database.init():
 		return error(app.config.db_err_title, config.db_err_msg), 503
 
-	database.query("SELECT * FROM articles WHERE title=?", [title])
-	article = database.fetchone()
+	article =  database.fetch("SELECT * FROM articles WHERE title=?", [title])
 	database.close()	
 	if article != None:
-		return render_template('article.jinja', title=title, content=article['content'])
+		return render_template('article.html', title=title, content=article['content'])
 	else:
-		return render_template('article.jinja', title=title, content="There is currently no text on this page")
+		return render_template('article.html', title=title, content="There is currently no text on this page")
 
+@app.route('/edit', defaults={ 'title' : None })
 @app.route('/edit/<title>')
 def route_edit(title):
+	if title == None:
+		return redirect('/')
 	title = title.replace("_", " ")
 
 	if not database.init():
 		return error(app.config.db_err_title, config.db_err_msg), 503
 	
-	database.query("SELECT * FROM articles WHERE title = ?", [title])
-	article = database.fetchone()
+	article = database.fetch("SELECT * FROM articles WHERE title = ?", [title])
 	database.close()
 
 	if article != None:
-		return render_template('edit.jinja', title=article['title'], id=article['id'], content=article['content'])
+		return render_template('edit.html', title=article['title'], id=article['id'], content=article['content'])
 	else:
-		return render_template('edit.jinja', title=escape(title), id=0, content='')
+		return render_template('edit.html', title=title, id=0, content='')
 
 @app.route('/do/edit', methods=['POST'])
 def route_do_edit():
@@ -70,8 +67,7 @@ def route_do_edit():
 @app.route('/random')
 def route_random():
 	database.init()
-	database.query("SELECT title FROM articles WHERE title!='Main Page' ORDER BY RANDOM() LIMIT 1")
-	row = database.fetchone()
+	row = database.fetch("SELECT title FROM articles WHERE title!='Main Page' ORDER BY RANDOM() LIMIT 1")
 	database.close()
 
 	if row != None:
@@ -82,10 +78,13 @@ def route_random():
 
 
 def error(error, message):
-	return render_template('error.jinja', error=error, message=message)
+	return render_template('error.html', error=error, message=message)
+
+def static_url(file):
+	return url_for('static', filename=file)
 
 @app.context_processor
 def util_processor():
-    return dict(markdown_parse=markdown.markdown)
+    return dict(markdown_parse=markdown.markdown, static_url=static_url)
 
 

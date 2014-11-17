@@ -4,14 +4,15 @@ from fwiki import app
 app.config['debug'] = True
 
 #The title of the wiki
-app.config['title'] = 'FWiki'
+app.config['title'] = 'American 60\'s/70\'s Wiki'
 
 #The wiki logo
-app.config['logo_file'] = 'logo.png'
+app.config['logo_file'] = None
 
-#Sets wether "Powered by ..." should appear in the footer
+#Sets if "Powered by ..." appears in the footer
 app.config['expose'] = True
 
+#Password required to edit articles
 app.config['edit_pass'] = '1234'
 
 #Database options
