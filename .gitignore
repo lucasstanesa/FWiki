@@ -6,6 +6,7 @@ __pycache__/
 *.so
 *.db
 *.sql
+*.swp
 # Distribution / packaging
 .Python
 env/
