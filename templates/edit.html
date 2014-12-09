@@ -13,6 +13,7 @@
 {%block content %}
 	
 	<form method="POST" action="{{ url_for('route_do_edit') }}">
+		<input type="email" name="email"/>
 		{% if id %}
 			<input type="hidden" name="id" value="{{ id }}"/>
 		{% else %}
@@ -21,7 +22,7 @@
 		<input type="hidden" name="title" value="{{ title }}"/>
 		<textarea id="editor" name="content">{{ content }}</textarea>
 
-		{% if config.edit_pass %}
+		{% if config.locked %}
 			<p>Pass <input type="password" name="pass"/></p>
 		{% endif %}
 		<input type="submit" name="submit" value="Submit"/>
