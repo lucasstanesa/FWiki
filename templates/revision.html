@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% if rev == "list" %}
+    {% block title %} {{ config.title }} - Revisions for {{ title }} {% endblock %}
+    {% block header %}
+        {{ super() }}
+        <p>Viewing revisions for article {{ title }}</p>
+    {% endblock %}
+    {% block content %}
+        <table>
+        <tr><td>Revision #</td><td>Link</td></tr>
+        {% for article in revisions %}
+            <tr><td>{{ article.revision }}</td><td><a href="{{ url_for('route_revisions', title=title, rev=article.revision) }}">View</a></td></tr>
+        {% endfor %}
+        </table>
+    {% endblock %}
+{% else %}
+    {% block title %} {{ config.title }} - {{ title}} Revision {{ rev }} {% endblock %}
+    {% block header %}
+        {{ super() }}
+        <p>Viewing {{ title }} revision {{ rev }}</p>
+    {% endblock %}
+{% endif %}

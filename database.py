@@ -26,3 +26,7 @@ def query_many(query, binds=[]):
 def fetch(query, binds=[]):
 	g.cursor.execute(query, binds)
 	return g.cursor.fetchone()
+
+def fetch_all(query, binds=[]):
+    g.cursor.execute(query, binds)
+    return g.cursor.fetchall()

@@ -24,6 +24,27 @@ def route_article(title):
     else:
         return render_template('article.html', title=title, content='There is currently no text on this page')
 
+@app.route('/<title>/revisions', defaults={ 'rev' : 'list' })
+@app.route('/<title>/revisions/<rev>')
+def route_revisions(title, rev):
+    title = title.replace('_', ' ')
+    
+    if not database.init():
+        return error(app.config['db_err_title'], app.config['db_err_msg']), 503
+
+    if not database.fetch('SELECT 1 from articles WHERE title = ?', [title]):
+        return redirect('/%s' % title)
+
+    if rev == 'list':
+       revisions = database.fetch_all('SELECT * FROM articles WHERE title = ?', [title])
+       return render_template('revision.html', rev=rev, title=title, revisions=revisions)
+    elif rev != 0:
+       article = database.fetch('SELECT * FROM articles WHERE title = ? AND revision = ?', [title, rev])
+       return render_template('revision.html', rev=rev, title=title, content=article['content'])
+    else:
+       return redirect('/%s' % title)
+        
+
 @app.route('/edit', defaults={ 'title' : None })
 @app.route('/edit/<title>')
 def route_edit(title):

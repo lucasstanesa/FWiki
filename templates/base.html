@@ -9,9 +9,6 @@
 	<body>
 		<div id="header">
 			{% block header %}
-				{% if config.logo_file %}
-					<img src="{{ static_url('img/' + config.logo_file) }}"/>
-				{% endif %}
 				<p id="title">{{ config.title }}</p>
 				<nav>
 					<a href="{{ url_for('route_article') }}">Home</a>

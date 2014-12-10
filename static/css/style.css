@@ -32,6 +32,12 @@ nav > a:not(:first-child) {
 	margin:0px 5px 0px 5px;
 }
 
+td {
+    text-align: center;
+    width: 75px;
+    margin: 0;
+}
+
 .right {
 	float:right;
 }
