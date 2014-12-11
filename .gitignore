@@ -6,7 +6,6 @@ production/
 
 # C extensions
 *.so
-*.db
 *.sql
 *.swp
 # Distribution / packaging
