@@ -13,7 +13,9 @@
 				<nav>
 					<a href="{{ url_for('route_article') }}">Home</a>
 					<a href="{{ url_for('route_random') }}">Random</a>
+                    {% block nav_left %}{% endblock %}
 				</nav>
+                <div class="right"><nav>{% block nav_right %}{% endblock %}</nav></div>
 			{% endblock %}
 		</div>
 		<div id="content">

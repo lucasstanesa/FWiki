@@ -4,11 +4,8 @@
 	<link rel="stylesheet" href="{{ static_url('css/editor.css') }}"/>
 	{{ super() }}
 {% endblock %}
-{% block header %}
-	{{ super() }}
-	<nav class="right">
-		<a href="{{ url_for('route_article', title=title) }}">Back</a>
-	</nav>
+{% block nav_right %}
+	<a href="{{ url_for('route_article', title=title) }}">Back</a>
 {% endblock %}
 {%block content %}
 	
