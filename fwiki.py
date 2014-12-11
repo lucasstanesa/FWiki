@@ -24,6 +24,7 @@ def route_article(title):
     else:
         return render_template('article.html', title=title, content='There is currently no text on this page')
 
+ 
 @app.route('/<title>/revisions', defaults={ 'rev' : "list" })
 @app.route('/<title>/revisions/<rev>')
 def route_revisions(title, rev):
@@ -45,11 +46,8 @@ def route_revisions(title, rev):
        return redirect('/%s' % title)
         
 
-@app.route('/edit', defaults={ 'title' : None })
-@app.route('/edit/<title>')
+@app.route('/<title>/edit')
 def route_edit(title):
-    if title == None:
-        return redirect('/')
     title = title.replace('_', ' ')
 
     if not database.init():

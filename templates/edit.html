@@ -5,7 +5,7 @@
 	{{ super() }}
 {% endblock %}
 {% block nav_right %}
-	<a href="{{ url_for('route_article', title=title) }}">Back</a>
+	<li><a href="{{ url_for('route_article', title=title) }}">Back</a></li>
 {% endblock %}
 {%block content %}
 	

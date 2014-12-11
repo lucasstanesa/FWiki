@@ -1,6 +1,8 @@
 FWiki
 =====
 
+This is a school project, and is nowhere near safe for real deployment.
+
 Barebones python wiki using flask
 
 Requirements

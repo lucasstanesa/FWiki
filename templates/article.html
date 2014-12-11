@@ -1,18 +1,21 @@
 {% extends "base.html" %}
 {% block title %}{{ config.title }} - {{ title  }}{% endblock %}
-{% block header -%}
-	{{ super() }}
-	<a class="right" href="{{ url_for('route_edit', title=title) }}"><small>Edit</small></a>
-{% endblock %}
 {% block content -%}
-		<div class="article">
-			{% if title == 'Main Page' -%}
-				<h2 class="title">{{ config.title }}</h2>
-			{% else -%}
-				<h2 class="title">{{ title }}</h2>
-			{% endif %}
-		<p class="content">
-			{{ markdown_parse(content)|safe }}
-		</p>
+		<div class="panel panel-default">
+            <div class="panel-heading">
+                {% if title == 'Main Page' -%}
+			    	<h2 class="title">{{ config.title }}</h2>
+			    {% else -%}
+			    	<h2 class="title">{{ title }}</h2>
+			    {% endif %}
+                {% if title != 'Main Page' %}
+                    <div style="float:right;">
+                        <a href="{{ url_for('route_edit', title=title) }}"></a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="panel-body">
+			    {{ markdown_parse(content)|safe }}
+           </div>
 	</div>
 {% endblock %}
